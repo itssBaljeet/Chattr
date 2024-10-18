@@ -1,21 +1,35 @@
 package com.noahharris.chattr.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "CALL")
 public class Call {
     // Fields for database entity (table)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "call_id")
+    private Long id;
+    @Column(name = "caller")
     private String caller;
+    @Column(name = "receiver")
     private String receiver;
+    @Column(name = "start_time")
     private int startTime;
+    @Column(name = "stop_time")
     private int stopTime;
 
+    // No-arg default Constructor
+    protected Call() {}
+
+    // Constructor used when making Call records in database
+    public Call(Long id, String caller, String receiver, int startTime, int stopTime) {
+        this.id = id;
+        this.caller = caller;
+        this.receiver = receiver;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+    }
 
     public String getCaller() {
         return caller;
