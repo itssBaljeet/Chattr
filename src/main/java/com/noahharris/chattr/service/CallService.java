@@ -18,8 +18,8 @@ public class CallService {
     public Call initiateCall(String caller, String receiver) {
 
         // Gets two lists of all active calls on two accounts
-        List<Call> activeCallerCalls = callRepository.findCallsByCallerAndStatus(caller, CallStatus.ACTIVE);
-        List<Call> activeReceiverCalls = callRepository.findCallsByReceiverAndStatus(receiver, CallStatus.ACTIVE);
+        List<Call> activeCallerCalls = callRepository.findByCallerAndStatus(caller, CallStatus.ACTIVE);
+        List<Call> activeReceiverCalls = callRepository.findByReceiverAndStatus(receiver, CallStatus.ACTIVE);
 
         // If there are any active calls, throw error
         if (!activeCallerCalls.isEmpty() || !activeReceiverCalls.isEmpty()) {
@@ -39,6 +39,7 @@ public class CallService {
 
     public void endCall(Call call) {
 
+        // Update call status and set end time
         call.setStopTime(LocalDateTime.now());
         call.setStatus(CallStatus.ENDED);
 

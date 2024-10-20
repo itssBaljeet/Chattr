@@ -6,17 +6,30 @@ import jakarta.persistence.*;
 @Table(name = "USER")
 public class User {
 
+    // Fields of user table
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private long id;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
     private String password;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    // Accessors & Mutators
+
+    public long getId() {
+        return id;
+    }
 
     public String getUsername() {
         return username;
@@ -42,4 +55,11 @@ public class User {
         this.password = password;
     }
 
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
 }

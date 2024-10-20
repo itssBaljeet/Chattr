@@ -13,7 +13,7 @@ public class Call {
     // Fields for database entity (table)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "call_id")
+    @Column(name = "call_id", nullable = false)
     private long id;
 
     @Column(name = "caller")

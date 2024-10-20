@@ -12,6 +12,6 @@ public interface CallRepository extends JpaRepository<Call, Long> {
     List<Call> findByReceiver(String username);
     List<Call> findByCaller(String username);
     List<Call> findByStatus(String status);
-    List<Call> findCallsByCallerAndStatus(String caller, CallStatus status);
-    List<Call> findCallsByReceiverAndStatus(String receiver, CallStatus status);
+    List<Call> findByCallerAndStatus(String caller, CallStatus status);
+    List<Call> findByReceiverAndStatus(String receiver, CallStatus status);
 }
