@@ -2,6 +2,11 @@ package com.noahharris.chattr.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+// Class representing CALL table in database
+// Keeps record of start/stop time and caller/receiver
 @Entity
 @Table(name = "CALL")
 public class Call {
@@ -9,24 +14,32 @@ public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "call_id")
-    private Long id;
+    private long id;
+
     @Column(name = "caller")
     private String caller;
+
     @Column(name = "receiver")
     private String receiver;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private CallStatus status;
+
     @Column(name = "start_time")
-    private int startTime;
+    private LocalDateTime startTime;
+
     @Column(name = "stop_time")
-    private int stopTime;
+    private LocalDateTime stopTime;
 
     // No-arg default Constructor
-    protected Call() {}
+    public Call() {}
 
     // Constructor used when making Call records in database
-    public Call(Long id, String caller, String receiver, int startTime, int stopTime) {
-        this.id = id;
+    public Call(String caller, String receiver, CallStatus status, LocalDateTime startTime, LocalDateTime stopTime) {
         this.caller = caller;
         this.receiver = receiver;
+        this.status = status;
         this.startTime = startTime;
         this.stopTime = stopTime;
     }
@@ -47,19 +60,27 @@ public class Call {
         this.receiver = receiver;
     }
 
-    public int getStartTime() {
+    public CallStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CallStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public int getStopTime() {
+    public LocalDateTime getStopTime() {
         return stopTime;
     }
 
-    public void setStopTime(int stopTime) {
+    public void setStopTime(LocalDateTime stopTime) {
         this.stopTime = stopTime;
     }
 
