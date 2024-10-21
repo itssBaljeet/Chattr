@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-// Class representing CALL table in database
+// Class representing 'call' table in database
 // Keeps record of start/stop time and caller/receiver
 @Entity
 @Table(name = "call")
@@ -16,17 +16,19 @@ public class Call {
     @Column(name = "call_id", nullable = false)
     private long id;
 
-    @Column(name = "caller")
-    private String caller;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "caller")
+    private User caller;
 
-    @Column(name = "receiver")
-    private String receiver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver")
+    private User receiver;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private CallStatus status;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
     @Column(name = "stop_time")
@@ -36,7 +38,7 @@ public class Call {
     public Call() {}
 
     // Constructor used when making Call records in database
-    public Call(String caller, String receiver, CallStatus status, LocalDateTime startTime, LocalDateTime stopTime) {
+    public Call(User caller, User receiver, CallStatus status, LocalDateTime startTime, LocalDateTime stopTime) {
         this.caller = caller;
         this.receiver = receiver;
         this.status = status;
@@ -44,19 +46,19 @@ public class Call {
         this.stopTime = stopTime;
     }
 
-    public String getCaller() {
+    public User getCaller() {
         return caller;
     }
 
-    public void setCaller(String caller) {
+    public void setCaller(User caller) {
         this.caller = caller;
     }
 
-    public String getReceiver() {
+    public User getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(String receiver) {
+    public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
 
