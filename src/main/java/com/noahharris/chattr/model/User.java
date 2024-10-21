@@ -3,7 +3,7 @@ package com.noahharris.chattr.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "app_user")
 public class User {
 
     // Fields of user table
@@ -25,8 +25,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    // Accessors & Mutators
+    // Constructors
+    public User() {}
 
+    public User(String username, String email, String password, UserStatus status) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.status = status;
+    }
+
+    // Accessors & Mutators
     public long getId() {
         return id;
     }

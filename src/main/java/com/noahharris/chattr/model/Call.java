@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 // Class representing CALL table in database
 // Keeps record of start/stop time and caller/receiver
 @Entity
-@Table(name = "CALL")
+@Table(name = "call")
 public class Call {
     // Fields for database entity (table)
     @Id

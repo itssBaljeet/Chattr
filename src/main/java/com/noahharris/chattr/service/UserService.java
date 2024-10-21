@@ -7,15 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
 
-    public void registerUser(User user) {
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void register(User user) {
         // Persists user object to db
         user.setStatus(UserStatus.ONLINE);
         userRepository.save(user);
