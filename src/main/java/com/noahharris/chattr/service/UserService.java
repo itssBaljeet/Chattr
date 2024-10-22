@@ -1,9 +1,11 @@
 package com.noahharris.chattr.service;
 
 import com.noahharris.chattr.model.User;
+import com.noahharris.chattr.model.UserDTO;
 import com.noahharris.chattr.model.UserStatus;
 import com.noahharris.chattr.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +21,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void register(User user) {
+    public ResponseEntity<?> register(UserDTO userDTO) {
         // Persists user object to db
-        user.setStatus(UserStatus.ONLINE);
-        userRepository.save(user);
+        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getEmail(), UserStatus.ONLINE);
+
+        // If username exists in db already, respond without saving
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            return ResponseEntity.internalServerError().body("Username is already taken");
+        }
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()){
+            return ResponseEntity.internalServerError().body("Email is already taken");
+        } else {
+            userRepository.save(user);
+            return ResponseEntity.ok().body("User registered successfully");
+        }
     }
 
     public User login(User user) {

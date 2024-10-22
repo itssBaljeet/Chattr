@@ -1,6 +1,7 @@
 package com.noahharris.chattr.controller;
 
 import com.noahharris.chattr.model.User;
+import com.noahharris.chattr.model.UserDTO;
 import com.noahharris.chattr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,18 +13,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
-public class UserController {
+public class UserApiController {
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserApiController(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping
-    public void registerUser(User user) {
-        userService.register(user);
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
+        return userService.register(userDTO);
     }
 
     @PostMapping("/login")
@@ -40,6 +41,7 @@ public class UserController {
     public List<User> findAll() {
         return userService.findAll();
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handle(Exception ex) {
