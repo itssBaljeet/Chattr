@@ -19,8 +19,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for simplicity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/video").permitAll() // Allow access to the /video endpoint without login
-                        .anyRequest().authenticated() // Any other request requires authentication
+                        .anyRequest().permitAll() // Any other request requires authentication
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

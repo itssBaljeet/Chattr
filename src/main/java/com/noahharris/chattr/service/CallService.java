@@ -13,8 +13,12 @@ import java.util.List;
 @Service
 public class CallService {
 
+    public final CallRepository callRepository;
+
     @Autowired
-    CallRepository callRepository;
+    public CallService(CallRepository callRepository) {
+        this.callRepository = callRepository;
+    }
 
     public Call initiateCall(User caller, User receiver) {
 
@@ -45,5 +49,9 @@ public class CallService {
         call.setStatus(CallStatus.ENDED);
         callRepository.save(call);
 
+    }
+
+    public Call findById(Long id) {
+        return callRepository.findById(id).orElse(null);
     }
 }

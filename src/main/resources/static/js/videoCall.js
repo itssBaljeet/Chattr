@@ -43,7 +43,7 @@ function handleAnswer(answerSdp) {
 
 function initiateCall() {
     let peerConnection = new RTCPeerConnection();
-
+    console.log("Call initiate test working")
     // Create SDP offer and send to server
     peerConnection.createOffer().then(offer => {
         peerConnection.setLocalDescription(offer);
