@@ -13,14 +13,14 @@ public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "call_id", nullable = false)
-    private long id;
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "caller")
+    @ManyToOne
+    @JoinColumn(name = "caller", referencedColumnName = "user_id")
     private User caller;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver")
+    @ManyToOne
+    @JoinColumn(name = "receiver", referencedColumnName = "user_id")
     private User receiver;
 
     @Enumerated(EnumType.STRING)
