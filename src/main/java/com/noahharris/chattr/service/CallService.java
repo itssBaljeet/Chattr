@@ -2,6 +2,7 @@ package com.noahharris.chattr.service;
 
 import com.noahharris.chattr.model.Call;
 import com.noahharris.chattr.model.CallStatus;
+import com.noahharris.chattr.model.User;
 import com.noahharris.chattr.repository.CallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class CallService {
     @Autowired
     CallRepository callRepository;
 
-    public Call initiateCall(String caller, String receiver) {
+    public Call initiateCall(User caller, User receiver) {
 
         // Gets two lists of all active calls on two accounts
         List<Call> activeCallerCalls = callRepository.findByCallerAndStatus(caller, CallStatus.ACTIVE);
@@ -42,6 +43,7 @@ public class CallService {
         // Update call status and set end time
         call.setStopTime(LocalDateTime.now());
         call.setStatus(CallStatus.ENDED);
+        callRepository.save(call);
 
     }
 }

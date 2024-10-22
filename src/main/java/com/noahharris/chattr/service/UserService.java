@@ -57,6 +57,8 @@ public class UserService {
 
         cUser.setStatus(UserStatus.OFFLINE);
 
+        userRepository.save(cUser);
+
     }
 
     public List<User> findAll() {

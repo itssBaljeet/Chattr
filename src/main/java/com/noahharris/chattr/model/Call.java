@@ -2,7 +2,6 @@ package com.noahharris.chattr.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 // Class representing 'call' table in database
