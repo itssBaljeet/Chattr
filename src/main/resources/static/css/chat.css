@@ -38,6 +38,7 @@ form#messageForm {
 
 input#message {
     flex-grow: 1;
+    font-size: 16px;
     padding: 10px;
     border-radius: 0;
     width: 80%; /* Take up 80% of the space */

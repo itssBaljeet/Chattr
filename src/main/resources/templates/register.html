@@ -5,23 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" th:href="@{/css/form.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
 <div th:replace="~{'fragments/_navbar' :: navbar}"></div>
+<div th:if="${successMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('success', ${successMessage})}"></div>
+</div>
+<div th:if="${errorMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('error', ${errorMessage})}"></div>
+</div>
 <h1>Register</h1>
-<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
-<div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
 <form th:action="@{/users/register}" method="post" id="registerForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required><br>
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br>
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br>
-
-    <button type="submit">Register</button>
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required/>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required/>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required/>
+    </div>
+    <div>
+        <button type="submit">Register</button>
+    </div>
 </form>
 
 <script src="/js/register.js"></script>

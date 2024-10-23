@@ -5,20 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" th:href="@{/css/form.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
 <div th:replace="~{'fragments/_navbar' :: navbar}"></div>
-<h2>Login</h2>
-<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
-<div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
+<div th:if="${successMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('success', ${successMessage})}"></div>
+</div>
+<div th:if="${errorMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('error', ${errorMessage})}"></div>
+</div>
+<h1>Login</h1>
 <form th:action="@{/users/login}" method="post">
     <div>
-        <label>Username:</label>
-        <input type="text" name="username" required/>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required/>
     </div>
     <div>
-        <label>Password:</label>
-        <input type="password" name="password" required/>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required/>
     </div>
     <div>
         <button type="submit">Login</button>

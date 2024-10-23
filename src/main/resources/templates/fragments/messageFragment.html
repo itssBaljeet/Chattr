@@ -1,0 +1,6 @@
+<!-- templates/fragments/messageFragment.html -->
+<div th:fragment="message(type, messageText)">
+    <div th:classappend="${type}" style="padding: 10px; border-radius: 5px; margin-bottom: 20px; height: 30px">
+        <p th:text="${messageText}" style="margin-top: 6px; text-align: left"></p>
+    </div>
+</div>

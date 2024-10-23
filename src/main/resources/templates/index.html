@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>Chattr</title>
     <link rel="stylesheet" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
 <div th:replace="~{'fragments/_navbar' :: navbar}"></div>
+<div th:if="${successMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('success', ${successMessage})}"></div>
+</div>
+<div th:if="${errorMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('error', ${errorMessage})}"></div>
+</div>
 <h1>Welcome to Chattr!</h1>
 <p>This is the landing page for a video call web app</p>
 </body>
