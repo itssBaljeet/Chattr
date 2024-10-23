@@ -6,9 +6,9 @@ import com.noahharris.chattr.model.UserStatus;
 import com.noahharris.chattr.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,15 +17,20 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseEntity<?> register(UserDTO userDTO) {
         // Persists user object to db
-        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getEmail(), UserStatus.ONLINE);
+        User user = new User(userDTO.getUsername(),
+                passwordEncoder.encode(userDTO.getPassword()),
+                userDTO.getEmail(),
+                UserStatus.ONLINE);
 
         // If username exists in db already, respond without saving
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
@@ -39,34 +44,29 @@ public class UserService {
         }
     }
 
-    public Optional<User> login(String username, String password) {
+    public void login(String username) {
 
         Optional<User> user = userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username) : Optional.empty();
 
         // If id of user not in repository, throw error
         if (user.isEmpty()) {
-            return Optional.empty();
-        }
-
-        // Current user fetched from repository using id from parameter
-        var cUser = user.get();
-
-        // Check if password in parameter object matches password
-        // from user object fetched from db
-        if (!cUser.getPassword().equals(password)) {
-            return Optional.empty();
+            return;
         }
 
         // Update status to online
-        cUser.setStatus(UserStatus.ONLINE);
-
-        return Optional.of(cUser);
+        user.get().setStatus(UserStatus.ONLINE);
+        userRepository.save(user.get());
     }
 
-    public void logout(User user) {
+    public void logout(String username) {
+        User user = userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username).get() : null;
+
+        if (user == null) {
+            return;
+        }
 
         if (userRepository.findById(user.getId()).isEmpty()) {
-            throw new RuntimeException("User not found");
+            return;
         }
 
         var cUser = userRepository.findById(user.getId()).get();

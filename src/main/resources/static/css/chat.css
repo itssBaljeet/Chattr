@@ -44,7 +44,7 @@ input#message {
     width: 80%; /* Take up 80% of the space */
 }
 
-button[type="submit"] {
+#send-button {
     padding: 10px;
     border-radius: 0;
     width: 20%; /* Take up 20% of the space */

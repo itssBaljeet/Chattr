@@ -1,8 +1,9 @@
 package com.noahharris.chattr.controller;
 
-import com.noahharris.chattr.model.User;
 import com.noahharris.chattr.model.UserDTO;
 import com.noahharris.chattr.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -28,28 +27,39 @@ public class UserViewController {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        // Move session attributes to the model
+        if (session.getAttribute("successMessage") != null) {
+            model.addAttribute("successMessage", session.getAttribute("successMessage"));
+            session.removeAttribute("successMessage"); // Remove after displaying
+        }
+
+        if (session.getAttribute("errorMessage") != null) {
+            model.addAttribute("errorMessage", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage"); // Remove after displaying
+        }
         model.addAttribute("userDTO", new UserDTO());
         return "login";
     }
 
     @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
+    public String showRegistrationForm(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        // Move session attributes to the model
+        if (session.getAttribute("successMessage") != null) {
+            model.addAttribute("successMessage", session.getAttribute("successMessage"));
+            session.removeAttribute("successMessage"); // Remove after displaying
+        }
+
+        if (session.getAttribute("errorMessage") != null) {
+            model.addAttribute("errorMessage", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage"); // Remove after displaying
+        }
         model.addAttribute("userDTO", new UserDTO()); // Create a new UserDTO for the form
         return "register"; // Return the Thymeleaf template name
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute("userDTO") UserDTO userDTO, RedirectAttributes redirectAttributes) {
-        Optional<User> user = userService.login(userDTO.getUsername(), userDTO.getPassword());
-
-        if (user.isPresent()) {
-            redirectAttributes.addFlashAttribute("successMessage", "Login successful!");
-            return "redirect:/index";
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!");
-            return "redirect:/users/login";
-        }
     }
 
     @PostMapping("/register")
@@ -64,5 +74,4 @@ public class UserViewController {
             return "redirect:/users/register"; // Redirect back to the registration form with error message
         }
     }
-
 }

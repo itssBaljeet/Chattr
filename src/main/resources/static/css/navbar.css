@@ -31,6 +31,26 @@ nav a:hover {
     font-family: "Arial Rounded MT Bold", monospace;
 }
 
+.logout-button {
+    text-decoration: none; /* No underline */
+    color: white; /* Match link color */
+    margin-left: 10px; /* Space between links */
+    padding: 8px 16px 11px; /* Match link padding */
+    border-radius: 4px; /* Match link border radius */
+    background: none; /* No background */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+    font-family: "Arial Rounded MT Bold", serif;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.logout-button:hover {
+    background-color: #ddd; /* Match hover effect */
+}
+
+
 #site-name {
     font-size: 1.5em;
     font-weight: bold;

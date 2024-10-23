@@ -1,11 +1,17 @@
 <!-- templates/fragments/_navbar.html -->
-<div th:fragment="navbar">
+<div th:fragment="navbar" xmlns:sec="http://www.w3.org/1999/xhtml">
     <link rel="stylesheet" th:href="@{/css/navbar.css}" />
     <nav>
-        <a href="/" id="site-name">Chattr</a>
+        <a href="/index" id="site-name">Chattr</a>
         <div class="nav-right">
-            <a th:href="@{/users/login}">Login</a>
-            <a th:href="@{/users/register}">Register</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/users/login}">Login</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/users/register}">Register</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/users/profile}">Profile</a>
+            <div sec:authorize="isAuthenticated()" style="display: inline;">
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+            </div>
             <a th:href="@{/chat}">Chat!</a>
         </div>
     </nav>
