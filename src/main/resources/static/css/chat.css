@@ -1,0 +1,54 @@
+body {
+    background-color: #4a4c51; /* Gray background */
+    color: black; /* Black text color for contrast */
+    text-align: center; /* Center text globally */
+    margin: 0; /* Remove default margin */
+    font-family: Arial, sans-serif; /* Set a default font */
+}
+
+#chatPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh; /* Full viewport height */
+}
+
+#chat {
+    background-color: #333; /* Darker background for chat area */
+    padding: 5px;
+    border-radius: 2px;
+    width: 80%;
+    max-width: 600px;
+}
+
+ul#messageArea {
+    background-color: white; /* White background for message area */
+    border: 2px solid #2c2c2c; /* Dark gray border */
+    list-style-type: none; /* Remove bullets */
+    padding: 10px;
+    margin-bottom: 0; /* Remove margin to align with form */
+    height: 300px; /* Fixed height for message area */
+    overflow-y: auto; /* Enable vertical scrolling if overflow */
+    text-align: left; /* Left align text inside the message area */
+}
+
+form#messageForm {
+    display: flex;
+}
+
+input#message {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 0;
+    width: 80%; /* Take up 80% of the space */
+}
+
+button[type="submit"] {
+    padding: 10px;
+    border-radius: 0;
+    width: 20%; /* Take up 20% of the space */
+}
+
+form#messageForm, input#message, button[type="submit"] {
+    box-sizing: border-box; /* Include padding and borders in element's total width and height calculations */
+}

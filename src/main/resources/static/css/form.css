@@ -6,6 +6,21 @@ body {
     font-family: Arial, sans-serif; /* Set a default font */
 }
 
-h1, p {
+h1, h2, p {
     margin-top: 20px; /* Add some space at the top of headings and paragraphs */
+}
+
+form {
+    display: inline-block; /* Center form on the page */
+    margin-top: 20px;
+}
+
+label, input, button {
+    display: block;
+    margin: 10px auto;
+}
+
+input, button {
+    padding: 8px;
+    width: 80%; /* Set a reasonable width for inputs and buttons */
 }

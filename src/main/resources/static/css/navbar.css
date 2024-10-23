@@ -1,14 +1,20 @@
+body {
+    margin: 0; /* Remove default margin to ensure full-width layout */
+}
+
 nav {
     background-color: dodgerblue;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%; /* Ensure full width */
     padding: 10px 20px;
+    box-sizing: border-box; /* Include padding in element's total */
 }
 
 nav a {
     text-decoration: none;
-    color: black;
+    color: white;
     margin-left: 10px; /* Space between links */
     padding: 8px 16px;
     border-radius: 4px;
@@ -19,15 +25,17 @@ nav a:hover {
     background-color: #ddd;
 }
 
-nav a:first-child {
+.nav-right {
+    display: flex;
+    font-weight: bold;
+    font-family: "Arial Rounded MT Bold", monospace;
+}
+
+#site-name {
     font-size: 1.5em;
     font-weight: bold;
     color: white;
     font-family: 'Courier', monospace; /* Set font to Courier */
-}
-
-.nav-right {
-    display: flex;
 }
 
 @media (max-width: 768px) {
