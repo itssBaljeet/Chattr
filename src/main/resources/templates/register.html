@@ -35,5 +35,16 @@
 </form>
 
 <script src="/js/register.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeButtons = document.querySelectorAll('.close-button');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.message-container').style.display = 'none';
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
