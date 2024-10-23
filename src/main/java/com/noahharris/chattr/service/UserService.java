@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -37,26 +39,28 @@ public class UserService {
         }
     }
 
-    public User login(User user) {
+    public Optional<User> login(String username, String password) {
+
+        Optional<User> user = userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username) : Optional.empty();
 
         // If id of user not in repository, throw error
-        if (userRepository.findById((user.getId())).isEmpty()) {
-            throw new RuntimeException("User not found");
+        if (user.isEmpty()) {
+            return Optional.empty();
         }
 
         // Current user fetched from repository using id from parameter
-        var cUser = userRepository.findById(user.getId()).get();
+        var cUser = user.get();
 
         // Check if password in parameter object matches password
         // from user object fetched from db
-        if (!cUser.getPassword().equals(user.getPassword())) {
-            throw new RuntimeException("Password incorrect");
+        if (!cUser.getPassword().equals(password)) {
+            return Optional.empty();
         }
 
         // Update status to online
         cUser.setStatus(UserStatus.ONLINE);
 
-        return cUser;
+        return Optional.of(cUser);
     }
 
     public void logout(User user) {

@@ -1,0 +1,12 @@
+<!-- templates/fragments/_navbar.html -->
+<div th:fragment="navbar">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <nav>
+        <a href="/" id="site-name">Chattr</a>
+        <div class="nav-right">
+            <a th:href="@{/users/login}">Login</a>
+            <a th:href="@{/users/register}">Register</a>
+            <a th:href="@{/chat}">Chat!</a>
+        </div>
+    </nav>
+</div>

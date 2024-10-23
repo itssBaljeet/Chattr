@@ -22,21 +22,6 @@ public class UserApiController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
-        return userService.register(userDTO);
-    }
-
-    @PostMapping("/login")
-    public User login(User user) {
-        return userService.login(user);
-    }
-
-    @PostMapping("/logout")
-    public void logout(User user) {
-        userService.logout(user);
-    }
-
     @GetMapping
     public List<User> findAll() {
         return userService.findAll();
