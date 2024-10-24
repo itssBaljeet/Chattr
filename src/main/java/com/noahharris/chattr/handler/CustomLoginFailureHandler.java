@@ -1,4 +1,4 @@
-package com.noahharris.chattr.config;
+package com.noahharris.chattr.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

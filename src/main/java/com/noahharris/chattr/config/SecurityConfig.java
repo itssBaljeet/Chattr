@@ -1,5 +1,8 @@
 package com.noahharris.chattr.config;
 
+import com.noahharris.chattr.handler.CustomLoginFailureHandler;
+import com.noahharris.chattr.handler.CustomLoginSuccessHandler;
+import com.noahharris.chattr.handler.CustomLogoutSuccessHandler;
 import com.noahharris.chattr.service.ChattrUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.noahharris.chattr.config;
+package com.noahharris.chattr.handler;
 
 import com.noahharris.chattr.service.UserService;
 import jakarta.servlet.ServletException;
@@ -25,6 +25,8 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
                                 Authentication authentication) throws IOException, ServletException {
         request.getSession().setAttribute("successMessage", "Logout successful!");
+
+        userService.logout(authentication.getName());
 
         response.sendRedirect(request.getContextPath() + "/users/login?logoutSuccess");  // Redirect to login page
     }
