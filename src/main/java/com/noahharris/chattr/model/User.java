@@ -25,6 +25,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @Column(name = "description")
+    private String description;
+
     // Constructors
     public User() {}
 
@@ -70,5 +73,13 @@ public class User {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body>
+
+<!-- Navbar fragment -->
+<div th:replace="~{'fragments/_navbar' :: navbar}"></div>
+<div th:if="${successMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('success', ${successMessage})}"></div>
+</div>
+<div th:if="${errorMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('error', ${errorMessage})}"></div>
+</div>
+<div class="container">
+    <h1>User Profile</h1>
+
+    <!-- Display User Information -->
+    <div class="profile-info">
+        <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Description:</strong>
+            <span th:if="${user.description != null}" th:text="${user.description}"></span>
+            <span th:if="${user.description == null}">No description set</span>
+        </p>
+    </div>
+
+    <!-- Form to update description -->
+    <h2>Update Your Description</h2>
+    <form th:action="@{/users/updateDescription}" method="post">
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="3" cols="40" placeholder="Enter your description here..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+body {
+    background-color: #4a4c51; /* Gray background consistent with other pages */
+    color: white; /* White text for contrast */
+    font-family: Arial, sans-serif; /* Consistent font */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto; /* Center the container and add top margin */
+    padding: 20px;
+    background-color: #333; /* Darker background for contrast */
+    border-radius: 8px; /* Rounded corners for a modern look */
+}
+
+h1, h2 {
+    color: #ffffff; /* White headings */
+    text-align: center;
+}
+
+.profile-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+strong {
+    color: #cccccc; /* Slightly lighter color for emphasis */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+textarea {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    resize: none; /* Disable resizing to maintain layout */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Blue button to stand out */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

@@ -6,6 +6,7 @@ import com.noahharris.chattr.model.UserStatus;
 import com.noahharris.chattr.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,19 @@ public class UserService {
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    // Find user by username
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+
+    // Update user's description
+    public void updateUserDescription(String username, String description) {
+        User user = findByUsername(username);  // Retrieve user
+        user.setDescription(description);  // Set new description
+        userRepository.save(user);  // Save updated user
     }
 
     public ResponseEntity<?> register(UserDTO userDTO) {
