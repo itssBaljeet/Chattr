@@ -1,6 +1,7 @@
 package com.noahharris.chattr.controller;
 
 import com.noahharris.chattr.model.ChatMessage;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -25,6 +26,12 @@ public class ChatController {
     @SendTo("/topic/public")
     public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        return chatMessage;
+    }
+
+    @MessageMapping("/chat/{roomCode}/sendMessage")
+    @SendTo("/topic/chat/{roomCode}")
+    public ChatMessage sendMessageToRoom(ChatMessage chatMessage, @DestinationVariable String roomCode) {
         return chatMessage;
     }
 }

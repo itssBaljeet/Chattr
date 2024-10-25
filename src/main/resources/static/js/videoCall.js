@@ -34,20 +34,20 @@ function connect(roomCode) {
     stompClient.connect({}, function () {
         console.log('Connected to signaling server');
         // Subscribe to the signaling channel for the room
-        stompClient.subscribe('/topic/call/' + roomCode, function (message) {
+        stompClient.subscribe(`/topic/call/${roomCode}`, function (message) {
             const data = JSON.parse(message.body);
             handleSignalingData(data);
         });
 
         // Subscribe to the public chat messages
-        stompClient.subscribe('/topic/public', function (message) {
+        stompClient.subscribe(`/topic/chat/${roomCode}`, function (message) {
             const chatMessage = JSON.parse(message.body);
-            onMessageReceived(chatMessage);  // Handle incoming chat messages
+            displayChatMessage(chatMessage);  // Handle incoming chat messages
         });
 
         getCurrentUsername().then(username => {
             // Tell your username to the server
-            stompClient.send("/app/chat.addUser",
+            stompClient.send(`/app/chat/${roomCode}/sendMessage`,
                 {},
                 JSON.stringify({sender: username, type: 'JOIN'})
             );
@@ -136,7 +136,7 @@ function handleSignalingData(data) {
     } else if (data.type === 'candidate') {
         handleCandidate(data.candidate);
     } else if (data.type === 'chat') {
-        displayChatMessage(data.sender, data.message);
+        displayChatMessage(data.message);
     }
 }
 
@@ -193,42 +193,34 @@ function sendChatMessage() {
             sender: currentUsername,
             content: message
         };
-        stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(data));
-        displayChatMessage(currentUsername, message);
+        stompClient.send(`/app/chat/${roomCode}/sendMessage`, {}, JSON.stringify(data));
         chatInput.value = '';
     }
 }
 
-// Display chat message in the chat window
-function displayChatMessage(sender, message) {
-    if (sender === currentUsername) {
+// Unified function to handle displaying chat messages
+function displayChatMessage(message) {
+    if (!message) {
+        console.error('Message is undefined:', message);
         return;
     }
 
+    const { sender, type, content } = message;
+
+    // Create a new list item (li) element for the message
     const li = document.createElement('li');
-    li.textContent = `${sender}: ${message}`;
-    chatMessages.appendChild(li);
-    chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the bottom
-}
 
-function onMessageReceived(message) {
-    // The payload is already a JavaScript object
-
-    // Create a new list item (li) element
-    let messageElement = document.createElement('li');
-
-    // Set the content of the message
-    if (message.type === 'JOIN') {
-        messageElement.textContent = message.sender + ' joined!';
-    } else if (message.type === 'CHAT') {
-        let text = message.sender + ': ' + message.content;
-        messageElement.textContent = text;
+    // Set the content based on message type
+    if (type === 'JOIN') {
+        li.textContent = `${sender} joined!`;
+    } else if (type === 'CHAT') {
+        li.textContent = `${sender}: ${content}`;
     } else {
-        // Handle other message types or log unknown types
-        console.log('Unknown message type:', message.type);
-        return; // Don't add unknown message types to the chat
+        console.log('Unknown message type:', type);
+        return; // Do not add unknown message types to the chat
     }
 
-    // Append the new message to the messageArea (ul)
-    document.querySelector('#chatMessages').appendChild(messageElement);
+    chatMessages.appendChild(li);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
