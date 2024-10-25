@@ -1,0 +1,143 @@
+body {
+    background-color: #4a4c51;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+.content-wrapper {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust for navbar height */
+    position: absolute;
+    top: 60px; /* Adjust for navbar height */
+    left: 0;
+    right: 0;
+}
+
+.video-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden; /* Prevent overflow from causing scroll */
+}
+
+.chat-section {
+    width: 20%; /* Adjust width for better alignment */
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    background-color: #333;
+    border-left: 1px solid #555;
+}
+
+ul#chatMessages {
+    flex-grow: 1;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 10px;
+    list-style-type: none;
+    overflow-y: auto;
+    margin: 0;
+}
+
+ul#chatMessages li {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+#roomForm {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+input#roomCode {
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    width: 120px;
+    margin-right: 10px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.video-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%; /* Prevent overflow */
+    padding: 0 10px; /* Padding between videos */
+}
+
+video {
+    width: 48%; /* Fit videos side-by-side */
+    border-radius: 8px;
+}
+
+#chatMessages {
+    flex-grow: 1;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 10px;
+    resize: none;
+    margin-bottom: 10px;
+    height: calc(100% - 40px); /* Fill height while leaving room for input */
+}
+
+.chat-input-container {
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    background-color: #444;
+}
+
+#chatInput {
+    flex-grow: 1;
+    padding: 8px;
+    margin-right: 2px;
+    background-color: #fff;
+    border: none;
+    border-radius: 4px;
+}
+
+#sendButton {
+    width: 80px; /* Make sure the button stays visible */
+    padding: 8px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+#sendButton:hover {
+    background-color: #0056b3;
+}

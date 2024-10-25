@@ -2,7 +2,6 @@ package com.noahharris.chattr.service;
 
 import com.noahharris.chattr.model.User;
 import com.noahharris.chattr.model.UserDTO;
-import com.noahharris.chattr.model.UserStatus;
 import com.noahharris.chattr.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +43,7 @@ public class UserService {
         User user = new User(userDTO.getUsername(),
                 passwordEncoder.encode(userDTO.getPassword()),
                 userDTO.getEmail(),
-                UserStatus.ONLINE);
+                User.UserStatus.ONLINE);
 
         // If username exists in db already, respond without saving
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
@@ -68,7 +67,7 @@ public class UserService {
         }
 
         // Update status to online
-        user.get().setStatus(UserStatus.ONLINE);
+        user.get().setStatus(User.UserStatus.ONLINE);
         userRepository.save(user.get());
     }
 
@@ -85,7 +84,7 @@ public class UserService {
 
         var cUser = userRepository.findById(user.getId()).get();
 
-        cUser.setStatus(UserStatus.OFFLINE);
+        cUser.setStatus(User.UserStatus.OFFLINE);
 
         userRepository.save(cUser);
 

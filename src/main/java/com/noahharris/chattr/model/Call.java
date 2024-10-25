@@ -85,4 +85,9 @@ public class Call {
         this.stopTime = stopTime;
     }
 
+    public enum CallStatus {
+        ACTIVE,
+        ENDED,
+        PENDING;
+    }
 }

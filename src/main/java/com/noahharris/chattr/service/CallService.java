@@ -1,7 +1,6 @@
 package com.noahharris.chattr.service;
 
 import com.noahharris.chattr.model.Call;
-import com.noahharris.chattr.model.CallStatus;
 import com.noahharris.chattr.model.User;
 import com.noahharris.chattr.repository.CallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,8 @@ public class CallService {
     public Call initiateCall(User caller, User receiver) {
 
         // Gets two lists of all active calls on two accounts
-        List<Call> activeCallerCalls = callRepository.findByCallerAndStatus(caller, CallStatus.ACTIVE);
-        List<Call> activeReceiverCalls = callRepository.findByReceiverAndStatus(receiver, CallStatus.ACTIVE);
+        List<Call> activeCallerCalls = callRepository.findByCallerAndStatus(caller, Call.CallStatus.ACTIVE);
+        List<Call> activeReceiverCalls = callRepository.findByReceiverAndStatus(receiver, Call.CallStatus.ACTIVE);
 
         // If there are any active calls, throw error
         if (!activeCallerCalls.isEmpty() || !activeReceiverCalls.isEmpty()) {
@@ -35,7 +34,7 @@ public class CallService {
         newCall.setCaller(caller);
         newCall.setReceiver(receiver);
         newCall.setStartTime(LocalDateTime.now());
-        newCall.setStatus(CallStatus.ACTIVE);
+        newCall.setStatus(Call.CallStatus.ACTIVE);
 
         callRepository.save(newCall);
 
@@ -46,7 +45,7 @@ public class CallService {
 
         // Update call status and set end time
         call.setStopTime(LocalDateTime.now());
-        call.setStatus(CallStatus.ENDED);
+        call.setStatus(Call.CallStatus.ENDED);
         callRepository.save(call);
 
     }

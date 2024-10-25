@@ -1,6 +1,5 @@
 package com.noahharris.chattr;
 
-import com.noahharris.chattr.model.User;
 import com.noahharris.chattr.model.UserDTO;
 import com.noahharris.chattr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import static com.noahharris.chattr.model.UserStatus.*;
 
 @SpringBootApplication
 public class ChattrApplication {

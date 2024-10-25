@@ -82,4 +82,9 @@ public class User {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public enum UserStatus {
+        ONLINE,
+        OFFLINE;
+    }
 }

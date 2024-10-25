@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -15,18 +16,10 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class UserApiController {
 
-    private final UserService userService;
-
-    @Autowired
-    public UserApiController(UserService userService) {
-        this.userService = userService;
+    @GetMapping("/current-username")
+    public String getCurrentUsername(Principal principal) {
+        return principal.getName();
     }
-
-    @GetMapping
-    public List<User> findAll() {
-        return userService.findAll();
-    }
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handle(Exception ex) {

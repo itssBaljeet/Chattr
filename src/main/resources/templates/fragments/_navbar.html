@@ -4,15 +4,23 @@
     <nav>
         <a href="/index" id="site-name">Chattr</a>
         <div class="nav-right">
+            <!-- Show Login and Register links if the user is NOT authenticated -->
             <a sec:authorize="!isAuthenticated()" th:href="@{/users/login}">Login</a>
             <a sec:authorize="!isAuthenticated()" th:href="@{/users/register}">Register</a>
+
+            <!-- Show Profile, Chat, and Video links if the user IS authenticated -->
             <a sec:authorize="isAuthenticated()" th:href="@{/users/profile}">Profile</a>
+
+            <a sec:authorize="isAuthenticated()" th:href="@{/chat}">Chat!</a>
+
+            <a sec:authorize="isAuthenticated()" th:href="@{/video}">Video Call</a>
+
+            <!-- Logout button, visible if the user is authenticated -->
             <div sec:authorize="isAuthenticated()" style="display: inline;">
                 <form th:action="@{/logout}" method="post" style="display: inline;">
                     <button type="submit" class="logout-button">Logout</button>
                 </form>
             </div>
-            <a th:href="@{/chat}">Chat!</a>
         </div>
     </nav>
 </div>
