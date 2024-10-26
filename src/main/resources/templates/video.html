@@ -12,19 +12,26 @@
 <div th:replace="~{fragments/_navbar :: navbar}" class="navbar"></div>
 <div class="content-wrapper">
     <div class="video-section">
-        <h2>Join Video Chat</h2>
+        <h2>Video Chat Controls</h2>
         <form id="roomForm">
             <label for="roomCode">Enter Room Code:</label>
             <input type="text" id="roomCode" required>
             <button type="submit">Join Room</button>
         </form>
+        <div class="button-container">
+            <button id="connectWebSocketButton" disabled>Connect WebSocket</button>
+            <button id="sendOffer" disabled>Send Offer</button>
+            <button id="startMediaButton">Start Camera</button>
+            <button id="initiateCallButton" disabled>Initiate WebRTC</button>
+            <button id="leaveRoomButton" disabled>Leave Room</button>
+        </div>
         <div class="video-container">
             <video id="localVideo" autoplay playsinline muted></video>
             <video id="remoteVideo" autoplay playsinline></video>
         </div>
     </div>
     <div class="chat-section">
-        <ul id="chatMessages"></ul> <!-- Changed from <textarea> to <ul> -->
+        <ul id="chatMessages"></ul>
         <div class="chat-input-container">
             <input type="text" id="chatInput">
             <button id="sendButton">Send</button>

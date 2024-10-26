@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class VideoCallController {
 
-    @MessageMapping("/signal")
+    @MessageMapping("/signal/{roomCode}")
     @SendTo("/topic/call/{roomCode}")
     public SignalMessage handleSignaling(SignalMessage message, @DestinationVariable String roomCode) {
         // Broadcast signaling messages to the room

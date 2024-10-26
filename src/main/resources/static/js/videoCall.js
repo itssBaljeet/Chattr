@@ -1,226 +1,285 @@
+// DOM Elements
 const roomForm = document.getElementById('roomForm');
 const roomCodeInput = document.getElementById('roomCode');
-let roomCode;
-
-// Video elements
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
+const chatInput = document.getElementById('chatInput');
+const sendButton = document.getElementById('sendButton');
+const chatMessages = document.getElementById('chatMessages');
 
-// WebRTC and WebSocket variables
+let roomCode = null;
+let currentUsername = '';
+fetchUsername().then(username => {
+    currentUsername = username;
+    console.log("Current Username:", currentUsername); // This will log the string value
+}).catch(error => {
+    console.error("Error setting currentUsername:", error);
+});
 let localStream;
 let peerConnection;
 let stompClient = null;
 
-// WebRTC configuration for STUN server
+document.getElementById('startMediaButton').addEventListener('click', setupMedia);
+document.getElementById('initiateCallButton').addEventListener('click', setupPeerConnection);
+document.getElementById('leaveRoomButton').addEventListener('click', leaveRoom);
+document.getElementById('sendOffer').addEventListener('click', sendOffer);
+
+// WebRTC Configuration
 const configuration = {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },  // Google STUN server
+        {
+            urls: 'turn:global.turn.twilio.com:3478?transport=udp',
+            username: 'f9dca00024fa8f8e11a22b40a3259d1946657ce52f6399fdb84bb0b53f82bf3c',       // From Twilio
+            credential: '1a5a81dc75e34a9c4a81bc46fe963faa'    // From Twilio
+        }
+    ]
 };
 
-// Handle room form submission to start the call
+// Initialize Room Connection
 roomForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    roomCode = roomCodeInput.value;
-    connect(roomCode);  // Call connect to set up WebSocket connection when the room is submitted
+    event.preventDefault(); // Prevent form submission
+    const inputRoomCode = roomCodeInput.value.trim();
+
+
+    if (inputRoomCode) {
+        roomCode = inputRoomCode; // Store the room code
+        document.getElementById("connectWebSocketButton").disabled = false;
+        document.getElementById("leaveRoomButton").disabled = false; // Enable the WebSocket button
+        console.log("Room code set:", roomCode);
+    } else {
+        alert("Please enter a room code before joining.");
+    }
 });
 
-let currentUsername = ''; // Variable to store the current user's username
+// Connect to websocket
+document.getElementById("connectWebSocketButton").addEventListener("click", function () {
+    if (!roomCode) {
+        alert("Room code is required to connect to WebSocket.");
+        return;
+    }
 
+    // Call the setupWebSocket function with the room code
+    setupWebSocket(roomCode);
 
-// Initialize WebSocket connection and subscribe to the room
-function connect(roomCode) {
-    const socket = new SockJS('/ws');
-    stompClient = Stomp.over(socket);
+});
 
-    stompClient.connect({}, function () {
-        console.log('Connected to signaling server');
-        // Subscribe to the signaling channel for the room
-        stompClient.subscribe(`/topic/call/${roomCode}`, function (message) {
-            const data = JSON.parse(message.body);
-            handleSignalingData(data);
+// Shutdown peer connection, websockets, and streams
+function leaveRoom() {
+    if (stompClient && stompClient.connected) {
+        stompClient.disconnect(() => {
+            console.log('Disconnected from WebSocket server.');
+            sendLeaveMessage();
         });
+    }
+    if (peerConnection) {
+        peerConnection.close();
+        peerConnection = null;
+        console.log('Peer connection closed.');
+    }
+    localStream.getTracks().forEach(track => track.stop());
+    localVideo.srcObject = null;
+    remoteVideo.srcObject = null;
+}
 
-        // Subscribe to the public chat messages
-        stompClient.subscribe(`/topic/chat/${roomCode}`, function (message) {
-            const chatMessage = JSON.parse(message.body);
-            displayChatMessage(chatMessage);  // Handle incoming chat messages
-        });
+// Fetch current username from the server
+async function fetchUsername() {
+    try {
+        const response = await fetch('/api/users/current-username');
+        return await response.text();
+    } catch (error) {
+        console.error('Error fetching username:', error);
+        throw error;
+    }
+}
 
-        getCurrentUsername().then(username => {
-            // Tell your username to the server
-            stompClient.send(`/app/chat/${roomCode}/sendMessage`,
-                {},
-                JSON.stringify({sender: username, type: 'JOIN'})
-            );
+// Get media stream (camera and microphone)
+async function setupMedia() {
+    try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
+        document.getElementById("initiateCallButton").disabled = false;
+        console.log('Local stream initialized');
+    } catch (error) {
+        console.error('Error accessing media devices:', error);
+        throw error;
+    }
+}
 
-            // Get media (camera/mic) and start WebRTC
-            getMedia().then(() => {
-                initiateWebRTC();
-            }).catch(error => {
-                console.error('Media access error: ', error);
-            });
-        });
+// Set up WebSocket connection and subscriptions
+function setupWebSocket(roomCode) {
+    return new Promise((resolve, reject) => {
+        if (stompClient && stompClient.connected) {
+            console.log("WebSocket is already connected.");
+            return;
+        }
+
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function () {
+            console.log('Connected to signaling server');
+            stompClient.subscribe(`/topic/call/${roomCode}`, message => handleSignalingData(JSON.parse(message.body)));
+            stompClient.subscribe(`/topic/chat/${roomCode}`, message => displayChatMessage(JSON.parse(message.body)));
+            sendJoinMessage();
+            resolve();
+        }, reject);
     });
 }
 
-// Function to get the current username from the server
-function getCurrentUsername() {
-    return fetch('/api/users/current-username')
-        .then(response => response.text())
-        .then(username => {
-            currentUsername = username;
-            console.log('Current username:', currentUsername);
-            return username; // Return the username string
-        })
-        .catch(error => {
-            console.error('Error fetching username:', error);
-            throw error; // Rethrow the error to be caught by the caller
-        });
-}
-
-// Get user's webcam and microphone
-function getMedia() {
-    return navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(stream => {
-            localVideo.srcObject = stream;
-            localStream = stream;
-            console.log('Local stream initialized');
-        })
-        .catch(error => {
-            console.error('Error accessing media devices:', error);
-            throw error; // Propagate error to prevent further setup
-        });
-}
-
 // Set up WebRTC peer connection and event handlers
-function initiateWebRTC() {
+function setupPeerConnection() {
+    console.log("WebRTC Connection Created")
     peerConnection = new RTCPeerConnection(configuration);
 
-    // Add local stream tracks to peer connection
+    // Add local stream to peer connection
     localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
-    // Handle ICE candidates
+    // Event: ICE candidate generation
     peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-            sendSignalingData({
-                type: 'candidate',
-                candidate: event.candidate
-            });
-        }
+        if (event.candidate) sendSignalingData({ type: 'candidate', candidate: event.candidate, sender: currentUsername });
     };
 
-    // Handle remote stream
+    document.getElementById("sendOffer").disabled = false;
+
+    // Event: Remote stream received
     peerConnection.ontrack = event => {
         remoteVideo.srcObject = event.streams[0];
         console.log('Remote stream received');
     };
+}
 
-    // Create and send offer to the other peer
+// Send sdp offer to server
+function sendOffer() {
+    // Create and send offer
+    console.log("Sending offer...")
     peerConnection.createOffer()
         .then(offer => peerConnection.setLocalDescription(offer))
-        .then(() => {
-            sendSignalingData({
-                type: 'offer',
-                sdp: peerConnection.localDescription.sdp
-            });
-        })
+        .then(() => sendSignalingData({ type: 'offer', sdp: peerConnection.localDescription.sdp, sender: currentUsername, roomCode: roomCode }))
         .catch(error => console.error('Error creating offer:', error));
 }
 
+// Send join message after establishing WebSocket and username
+function sendJoinMessage() {
+    sendChatMessage({
+        sender: currentUsername,
+        type: 'JOIN'
+    });
+}
+
+// Send join message after establishing WebSocket and username
+function sendLeaveMessage() {
+    sendChatMessage({
+        sender: currentUsername,
+        type: 'LEAVE'
+    });
+}
 
 // Handle incoming signaling data (offer, answer, candidate, chat)
 function handleSignalingData(data) {
-    if (data.type === 'offer') {
-        handleOffer(data.sdp);
-    } else if (data.type === 'answer') {
-        handleAnswer(data.sdp);
-    } else if (data.type === 'candidate') {
-        handleCandidate(data.candidate);
-    } else if (data.type === 'chat') {
-        displayChatMessage(data.message);
+    console.log("---SENDER---" + data.sender)
+    switch (data.type) {
+        case 'offer':
+            if (data.sender === currentUsername) {
+                console.log("refusing same offer")
+                return;
+            }
+            handleOffer(data.sdp);
+            break;
+        case 'answer':
+            if (data.sender === currentUsername) {
+                console.log("refusing same answer")
+                return;
+            }
+            handleAnswer(data.sdp);
+            break;
+        case 'candidate':
+            if (data.sender === currentUsername) {
+                console.log("refusing same candidate")
+                return;
+            }
+            handleCandidate(data.candidate);
+            break;
+        case 'CHAT':
+            displayChatMessage(data.message);
+            break;
+        default:
+            console.warn('Unknown signaling data type:', data.type);
     }
 }
 
-// Handle WebRTC offer from the other peer
+// Handle incoming WebRTC offer
 function handleOffer(offer) {
     peerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: offer }))
         .then(() => peerConnection.createAnswer())
         .then(answer => peerConnection.setLocalDescription(answer))
-        .then(() => {
-            sendSignalingData({
-                type: 'answer',
-                sdp: peerConnection.localDescription.sdp
-            });
-        })
+        .then(() => sendSignalingData({ type: 'answer', sdp: peerConnection.localDescription.sdp, roomCode: roomCode, sender: currentUsername }))
         .catch(error => console.error('Error handling offer:', error));
 }
 
 // Handle WebRTC answer from the other peer
 function handleAnswer(answer) {
-    peerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer }))
-        .catch(error => console.error('Error setting remote description:', error));
+    if (!peerConnection.remoteDescription) { // Ensure remote description is not already set
+        peerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer }))
+            .catch(error => console.error('Error setting remote description:', error));
+    }
 }
 
-// Handle incoming ICE candidates
+
+// Handle incoming ICE candidate
 function handleCandidate(candidate) {
     peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
         .catch(error => console.error('Error adding ICE candidate:', error));
 }
 
-// Send signaling data through WebSocket, including roomCode in the endpoint
+// Send signaling data through WebSocket
 function sendSignalingData(data) {
     stompClient.send(`/app/signal/${roomCode}`, {}, JSON.stringify(data));
 }
 
-// Chat functionality
-const chatInput = document.getElementById('chatInput');
-const sendButton = document.getElementById('sendButton');
-const chatMessages = document.getElementById('chatMessages');
-
-// Chat functionality
-sendButton.addEventListener('click', sendChatMessage);
+// Chat Message Functions
+sendButton.addEventListener('click', sendChat);
 chatInput.addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        sendChatMessage();
+        sendChat();
     }
 });
 
-function sendChatMessage() {
+function sendChat() {
     const message = chatInput.value.trim();
     if (message) {
-        let data = {
+        sendChatMessage({
             type: 'CHAT',
             sender: currentUsername,
             content: message
-        };
-        stompClient.send(`/app/chat/${roomCode}/sendMessage`, {}, JSON.stringify(data));
+        });
         chatInput.value = '';
     }
 }
 
-// Unified function to handle displaying chat messages
+// Send chat message through WebSocket
+function sendChatMessage(data) {
+    stompClient.send(`/app/chat/${roomCode}/sendMessage`, {}, JSON.stringify(data));
+}
+
+// Display incoming chat messages
 function displayChatMessage(message) {
-    if (!message) {
-        console.error('Message is undefined:', message);
-        return;
-    }
-
     const { sender, type, content } = message;
-
-    // Create a new list item (li) element for the message
     const li = document.createElement('li');
+    console.log("Creating chat message and appending...")
 
-    // Set the content based on message type
     if (type === 'JOIN') {
         li.textContent = `${sender} joined!`;
     } else if (type === 'CHAT') {
         li.textContent = `${sender}: ${content}`;
+    } else if (type === 'LEAVE') {
+        li.textContent = `${sender} left!`
     } else {
-        console.log('Unknown message type:', type);
-        return; // Do not add unknown message types to the chat
+        console.warn('Unknown message type:', type);
+        return;
     }
 
     chatMessages.appendChild(li);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-

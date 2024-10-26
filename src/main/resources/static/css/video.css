@@ -25,6 +25,28 @@ body {
     overflow: hidden; /* Prevent overflow from causing scroll */
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+    margin-top: 15px;
+}
+
+.button-container button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #0056b3;
+}
+
+
 .chat-section {
     width: 20%; /* Adjust width for better alignment */
     min-width: 15%;
