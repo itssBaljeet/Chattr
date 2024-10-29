@@ -44,24 +44,12 @@ roomForm.addEventListener('submit', function(event) {
 
     if (inputRoomCode) {
         roomCode = inputRoomCode; // Store the room code
-        document.getElementById("connectWebSocketButton").disabled = false;
         document.getElementById("leaveRoomButton").disabled = false; // Enable the WebSocket button
         console.log("Room code set:", roomCode);
+        setupWebSocket(roomCode);
     } else {
         alert("Please enter a room code before joining.");
     }
-});
-
-// Connect to websocket
-document.getElementById("connectWebSocketButton").addEventListener("click", function () {
-    if (!roomCode) {
-        alert("Room code is required to connect to WebSocket.");
-        return;
-    }
-
-    // Call the setupWebSocket function with the room code
-    setupWebSocket(roomCode);
-
 });
 
 // Shutdown peer connection, websockets, and streams
