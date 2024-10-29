@@ -1,4 +1,22 @@
 let stompClient = null;
+let currentUsername = null;
+fetchUsername().then(username => {
+    currentUsername = username;
+    console.log("Current username");
+}).catch(error => {
+    console.log("Error fetching username: ", error);
+    throw error;
+})
+
+async function fetchUsername() {
+    try {
+        const response = fetch("/api/users/current-username");
+        return (await response).text();
+    } catch (error) {
+        console.log("Error fetching username: ", error);
+        throw error;
+    }
+}
 
 function connect() {
     let socket = new SockJS('/ws');
@@ -8,12 +26,10 @@ function connect() {
 
 function onConnected() {
     stompClient.subscribe('/topic/public', onMessageReceived);
-    let username = "test_user"
-
     // Tell your username to the server
     stompClient.send("/app/chat.addUser",
         {},
-        JSON.stringify({sender: username, type: 'JOIN'})
+        JSON.stringify({sender: currentUsername, type: 'JOIN'})
     );
 }
 
@@ -23,13 +39,12 @@ function onError(error) {
 
 function sendMessage(event) {
     let messageContent = document.querySelector('#message').value.trim();
-    let username = "test_user"
 
     console.log("Sending data")
 
     if(messageContent && stompClient) {
         let chatMessage = {
-            sender: username,
+            sender: currentUsername,
             content: messageContent,
             type: 'CHAT'
         };
