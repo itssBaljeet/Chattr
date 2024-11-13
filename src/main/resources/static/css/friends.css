@@ -1,0 +1,84 @@
+/* friends.css */
+
+body {
+    background-color: #4a4c51; /* Gray background */
+    color: white; /* White text color for contrast */
+    text-align: center; /* Center text */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+    color: #ffffff;
+}
+
+.friend-request-form, .friend-list, .pending-requests {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #333840; /* Slightly darker gray background for sections */
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    text-align: left; /* Align content to the left inside */
+}
+
+.friend-request-form label, .friend-request-form input, .friend-list span, .pending-requests span {
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.friend-request-form button, .pending-requests button {
+    background-color: #007bff; /* Default button color */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.friend-list ul, .pending-requests ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.friend-list li, .pending-requests li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.pending-requests span {
+    flex-grow: 1;
+    text-align: left;
+    font-size: 1em;
+}
+
+.friend-request-form input[type="text"], .friend-request-form button {
+    width: calc(100% - 30px);
+    margin: 5px 0;
+}
+
+/* Button Styles */
+.accept-button {
+    background-color: #28a745; /* Green color for success */
+    color: white;
+    margin-right: 5px;
+}
+
+.reject-button, .block-button {
+    background-color: #dc3545; /* Red color for warning */
+    color: white;
+    margin-right: 5px;
+}
+
+.pending-requests form {
+    display: inline; /* Ensure buttons appear inline */
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+}

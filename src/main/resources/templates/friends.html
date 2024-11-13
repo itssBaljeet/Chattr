@@ -1,0 +1,62 @@
+<!-- templates/friends.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Friends List</title>
+    <link rel="stylesheet" th:href="@{/css/friends.css}" />
+</head>
+<body>
+<div th:replace="~{'fragments/_navbar' :: navbar}"></div>
+<div th:if="${successMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('success', ${successMessage})}"></div>
+</div>
+<div th:if="${errorMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('error', ${errorMessage})}"></div>
+</div>
+<h1>Your Friends</h1>
+
+<!-- Section for sending a friend request -->
+<div class="friend-request-form">
+    <h2>Send Friend Request</h2>
+    <form th:action="@{/users/friends/send-request}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+        <button type="submit">Send Request</button>
+    </form>
+</div>
+
+<!-- Section for displaying confirmed friends -->
+<div class="friend-list">
+    <h2>Friends</h2>
+    <ul>
+        <li th:each="friend : ${friends}">
+            <span th:text="${friend.friend.username}">Friend's Username</span>
+        </li>
+    </ul>
+</div>
+
+<!-- Section for displaying pending friend requests -->
+<div class="pending-requests">
+    <h2>Friend Requests</h2>
+    <ul>
+        <li th:each="request : ${friendRequests}">
+            <span th:text="${request.friend.getUsername()}">Requester</span>
+            <div class="button-group">
+                <form th:action="@{/users/friends/accept}" method="post">
+                    <input type="hidden" name="friendId" th:value="${request.id}" />
+                    <button type="submit" class="accept-button">Accept</button>
+                </form>
+                <form th:action="@{/users/friends/reject}" method="post">
+                    <input type="hidden" name="friendId" th:value="${request.id}" />
+                    <button type="submit" class="reject-button">Reject</button>
+                </form>
+                <form th:action="@{/users/friends/block}" method="post">
+                    <input type="hidden" name="friendId" th:value="${request.id}" />
+                    <button type="submit" class="block-button">Block</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

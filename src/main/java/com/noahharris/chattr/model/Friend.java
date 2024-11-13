@@ -16,7 +16,7 @@ public class Friend {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "friend_id")
     private User friend;
 
     @Enumerated(EnumType.STRING)
@@ -70,6 +70,7 @@ public class Friend {
     public enum FriendshipStatus {
         PENDING,
         ACCEPTED,
+        REJECTED,
         BLOCKED
     }
 }
