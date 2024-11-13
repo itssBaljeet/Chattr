@@ -23,6 +23,7 @@ body {
     align-items: center;
     padding: 20px;
     overflow: hidden; /* Prevent overflow from causing scroll */
+    margin-bottom: 10px;
 }
 
 .button-container {
