@@ -32,7 +32,7 @@ public class FriendService {
     }
 
     public boolean sendFriendRequest(User user1, User user2) {
-        Optional<Friend> friendship = friendRepository.findByUserAndFriend(user1, user2);
+        Optional<Friend> friendship = friendRepository.findBySenderAndReceiver(user1, user2);
 
         if (friendship.isPresent()) {
             return false;
@@ -43,11 +43,11 @@ public class FriendService {
     }
 
     public List<Friend> getConfirmedFriends(User user) {
-        return friendRepository.findByUserAndStatus(user, Friend.FriendshipStatus.ACCEPTED);
+        return friendRepository.findFriendsByUserAndStatus(user, Friend.FriendshipStatus.ACCEPTED);
     }
 
     public List<Friend> getPendingFriends(User user) {
-        return friendRepository.findByUserAndStatus(user, Friend.FriendshipStatus.PENDING);
+        return friendRepository.findFriendsByUserAndStatus(user, Friend.FriendshipStatus.PENDING);
     }
 
     public boolean acceptFriendRequest(Long friendId) {

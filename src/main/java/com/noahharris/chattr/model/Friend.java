@@ -12,12 +12,12 @@ public class Friend {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id")
-    private User friend;
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
@@ -25,9 +25,9 @@ public class Friend {
     private LocalDateTime createdDateTime;
 
     public Friend() {};
-    public Friend(User user, User friend, FriendshipStatus status) {
-        this.user = user;
-        this.friend = friend;
+    public Friend(User sender, User friend, FriendshipStatus status) {
+        this.sender = sender;
+        this.receiver = friend;
         this.status = status;
     }
 
@@ -35,20 +35,20 @@ public class Friend {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public User getSender() {
+        return sender;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setSender(User user) {
+        this.sender = user;
     }
 
-    public User getFriend() {
-        return friend;
+    public User getReceiver() {
+        return receiver;
     }
 
-    public void setFriend(User friend) {
-        this.friend = friend;
+    public void setReceiver(User friend) {
+        this.receiver = friend;
     }
 
     public FriendshipStatus getStatus() {

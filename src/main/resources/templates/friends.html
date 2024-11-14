@@ -30,7 +30,7 @@
     <h2>Friends</h2>
     <ul>
         <li th:each="friend : ${friends}">
-            <span th:text="${friend.friend.username}">Friend's Username</span>
+            <span th:text="${currentUser.username == friend.receiver.username ? friend.sender.username : friend.receiver.username}">Friend's Username</span>
         </li>
     </ul>
 </div>
@@ -38,10 +38,14 @@
 <!-- Section for displaying pending friend requests -->
 <div class="pending-requests">
     <h2>Friend Requests</h2>
+    <h3>Incoming</h3>
     <ul>
-        <li th:each="request : ${friendRequests}">
-            <span th:text="${request.friend.getUsername()}">Requester</span>
-            <div class="button-group">
+        <li th:each="request : ${friendRequests}" th:if="${request.receiver.getUsername() == currentUser.getUsername()}">
+            <span th:text="${currentUser.username == request.receiver.username ? request.sender.username : request.receiver.username}">
+                Friend's Username
+            </span>
+            <!-- Show action buttons only if the currentUser is the receiver -->
+            <div class="button-group" th:if="${currentUser.username == request.receiver.username}">
                 <form th:action="@{/users/friends/accept}" method="post">
                     <input type="hidden" name="friendId" th:value="${request.id}" />
                     <button type="submit" class="accept-button">Accept</button>
@@ -55,6 +59,12 @@
                     <button type="submit" class="block-button">Block</button>
                 </form>
             </div>
+        </li>
+    </ul>
+    <h3>Outgoing</h3>
+    <ul>
+        <li th:each="request : ${friendRequests}" th:if="${request.sender.getUsername() == #authentication.getName()}">
+            <span th:text="${currentUser.username == request.receiver.username ? request.sender.username : request.receiver.username + '     ' + request.getStatus()}">Receiver</span>
         </li>
     </ul>
 </div>

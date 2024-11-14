@@ -64,6 +64,7 @@ public class FriendController {
 
         model.addAttribute("friends", friends);
         model.addAttribute("friendRequests", friendRequests);
+        model.addAttribute("currentUser", user);
 
         return "friends";
     }
