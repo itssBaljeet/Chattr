@@ -45,6 +45,10 @@ public class Call {
         this.stopTime = stopTime;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public User getCaller() {
         return caller;
     }

@@ -53,4 +53,8 @@ public class CallService {
     public Call findById(Long id) {
         return callRepository.findById(id).orElse(null);
     }
+
+    public void save(Call call) {
+        callRepository.save(call);
+    }
 }

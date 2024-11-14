@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chattr</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:src="@{/js/websocket.js}"></script> <!-- Link to your JavaScript file -->
+</head>
+<body>
+<div th:replace="~{'fragments/_navbar' :: navbar}"></div>
+<div th:if="${successMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('success', ${successMessage})}"></div>
+</div>
+<div th:if="${errorMessage}">
+    <div th:replace="~{'fragments/messageFragment' :: message('error', ${errorMessage})}"></div>
+</div>
+<div th:replace="~{'fragments/callRequestNotification' :: callRequestNotification}"></div>
+
+<!-- Content Block -->
+<div th:fragment="content">
+    <!-- Page-specific content will go here -->
+</div>
+</body>
+</html>
