@@ -61,7 +61,6 @@ public class UserService {
 
         Optional<User> user = userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username) : Optional.empty();
 
-        // If id of user not in repository, throw error
         if (user.isEmpty()) {
             return;
         }
@@ -72,22 +71,15 @@ public class UserService {
     }
 
     public void logout(String username) {
-        User user = userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username).get() : null;
+        Optional<User> user = userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username) : Optional.empty();
 
-        if (user == null) {
+        if (user.isEmpty()) {
             return;
         }
 
-        if (userRepository.findById(user.getId()).isEmpty()) {
-            return;
-        }
-
-        var cUser = userRepository.findById(user.getId()).get();
-
-        cUser.setStatus(User.UserStatus.OFFLINE);
-
-        userRepository.save(cUser);
-
+        // Update status to offline
+        user.get().setStatus(User.UserStatus.OFFLINE);
+        userRepository.save(user.get());
     }
 
     public List<User> findAll() {

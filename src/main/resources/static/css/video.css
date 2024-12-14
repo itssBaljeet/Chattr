@@ -119,6 +119,7 @@ button:hover {
     width: 100%;
     max-width: 100%; /* Prevent overflow */
     padding: 0 10px; /* Padding between videos */
+    flex: auto;
 }
 
 video {
