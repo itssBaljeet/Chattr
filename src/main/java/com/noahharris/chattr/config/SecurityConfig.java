@@ -3,36 +3,18 @@ package com.noahharris.chattr.config;
 import com.noahharris.chattr.handler.CustomLoginFailureHandler;
 import com.noahharris.chattr.handler.CustomLoginSuccessHandler;
 import com.noahharris.chattr.handler.CustomLogoutSuccessHandler;
-import com.noahharris.chattr.service.ChattrUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final ChattrUserDetailsService chattrUserDetailsService;
-    private final CustomLoginSuccessHandler customLoginSuccessHandler;
-
-    @Autowired
-    public SecurityConfig(ChattrUserDetailsService chattrUserDetailsService, CustomLoginSuccessHandler customLoginSuccessHandler) {
-        this.chattrUserDetailsService = chattrUserDetailsService;
-        this.customLoginSuccessHandler = customLoginSuccessHandler;
-    }
-
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomLogoutSuccessHandler customLogoutSuccessHandler, CustomLoginFailureHandler customLoginFailureHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomLogoutSuccessHandler customLogoutSuccessHandler, CustomLoginFailureHandler customLoginFailureHandler, CustomLoginSuccessHandler customLoginSuccessHandler) throws Exception {
         http
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/ws/**"))
